@@ -5,38 +5,39 @@ import 'app_colors.dart';
 /// Centralized text style helpers for consistent typography.
 class AppTextStyles {
   // ─── Display ───────────────────────────────────────
-  static TextStyle displayLarge({Color? color}) => GoogleFonts.plusJakartaSans(
-    fontSize: 32,
+  static TextStyle displayLarge({Color? color}) => GoogleFonts.outfit(
+    fontSize: 34,
     fontWeight: FontWeight.w800,
+    color: color ?? AppColors.textPrimary,
+    height: 1.15,
+    letterSpacing: -1.0,
+  );
+
+  static TextStyle displayMedium({Color? color}) => GoogleFonts.outfit(
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
     color: color ?? AppColors.textPrimary,
     height: 1.2,
     letterSpacing: -0.5,
   );
 
-  static TextStyle displayMedium({Color? color}) => GoogleFonts.plusJakartaSans(
-    fontSize: 28,
-    fontWeight: FontWeight.w700,
-    color: color ?? AppColors.textPrimary,
-    height: 1.2,
-    letterSpacing: -0.3,
-  );
-
   // ─── Headings ──────────────────────────────────────
-  static TextStyle h1({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle h1({Color? color}) => GoogleFonts.outfit(
     fontSize: 24,
     fontWeight: FontWeight.w700,
     color: color ?? AppColors.textPrimary,
     height: 1.3,
+    letterSpacing: -0.3,
   );
 
-  static TextStyle h2({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle h2({Color? color}) => GoogleFonts.outfit(
     fontSize: 20,
     fontWeight: FontWeight.w700,
     color: color ?? AppColors.textPrimary,
     height: 1.3,
   );
 
-  static TextStyle h3({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle h3({Color? color}) => GoogleFonts.outfit(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: color ?? AppColors.textPrimary,
@@ -44,21 +45,21 @@ class AppTextStyles {
   );
 
   // ─── Body ──────────────────────────────────────────
-  static TextStyle bodyLarge({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle bodyLarge({Color? color}) => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: color ?? AppColors.textPrimary,
     height: 1.5,
   );
 
-  static TextStyle body({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle body({Color? color}) => GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: color ?? AppColors.textPrimary,
     height: 1.5,
   );
 
-  static TextStyle bodySmall({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle bodySmall({Color? color}) => GoogleFonts.inter(
     fontSize: 13,
     fontWeight: FontWeight.w400,
     color: color ?? AppColors.textSecondary,
@@ -66,13 +67,13 @@ class AppTextStyles {
   );
 
   // ─── Labels ────────────────────────────────────────
-  static TextStyle label({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle label({Color? color}) => GoogleFonts.inter(
     fontSize: 13,
     fontWeight: FontWeight.w600,
     color: color ?? AppColors.textPrimary,
   );
 
-  static TextStyle labelSmall({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle labelSmall({Color? color}) => GoogleFonts.inter(
     fontSize: 11,
     fontWeight: FontWeight.w600,
     color: color ?? AppColors.textSecondary,
@@ -80,13 +81,13 @@ class AppTextStyles {
   );
 
   // ─── Caption & Overline ────────────────────────────
-  static TextStyle caption({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle caption({Color? color}) => GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: color ?? AppColors.textTertiary,
   );
 
-  static TextStyle overline({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle overline({Color? color}) => GoogleFonts.inter(
     fontSize: 10,
     fontWeight: FontWeight.w700,
     color: color ?? AppColors.textTertiary,
@@ -94,14 +95,14 @@ class AppTextStyles {
   );
 
   // ─── Button ────────────────────────────────────────
-  static TextStyle button({Color? color}) => GoogleFonts.plusJakartaSans(
+  static TextStyle button({Color? color}) => GoogleFonts.outfit(
     fontSize: 15,
     fontWeight: FontWeight.w600,
     color: color ?? Colors.white,
   );
 
   // ─── Monospace (for IDs, codes) ────────────────────
-  static TextStyle mono({Color? color}) => GoogleFonts.jetBrainsMono(
+  static TextStyle mono({Color? color}) => GoogleFonts.sourceCodePro(
     fontSize: 12,
     fontWeight: FontWeight.w500,
     color: color ?? AppColors.textTertiary,

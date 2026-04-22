@@ -22,386 +22,316 @@ class ProfilePage extends ConsumerWidget {
     final pendingTickets = ticketState.tickets.where((t) => t.status == 'pending').length;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ─── Header ─────────────────────────────
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Gradient background
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: AppColors.premiumGradient,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(36),
-                      bottomRight: Radius.circular(36),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ─── Top Row ──────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Profil',
+                    style: GoogleFonts.outfit(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  child: Stack(
-                    children: [
-                      // Decorative shapes
-                      Positioned(
-                        top: -30,
-                        right: -20,
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.06),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 20,
-                        left: -30,
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white.withOpacity(0.04),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Avatar
-                Positioned(
-                  bottom: -46,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isDark ? AppColors.backgroundDark : Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        width: 88,
-                        height: 88,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: AppColors.primaryGradient,
-                        ),
-                        child: Center(
-                          child: Text(
-                            user?.name[0].toUpperCase() ?? 'U',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 36,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
-                ),
-
-                // Header title
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Profil',
-                          style: GoogleFonts.plusJakartaSans(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(Icons.edit_outlined, color: Colors.white, size: 18),
-                          ),
-                          onPressed: () {},
-                        ),
-                      ],
+                    child: Icon(
+                      Icons.settings_outlined,
+                      size: 20,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ).animate().fadeIn(),
 
-            const SizedBox(height: 56),
+              const SizedBox(height: 28),
 
-            // ─── User Info ──────────────────────────
-            Column(
-              children: [
-                Text(
-                  user?.name ?? 'Guest User',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
-                  ),
-                ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.15),
-
-                const SizedBox(height: 4),
-
-                Text(
-                  '@${user?.username ?? 'guest'}',
-                  style: GoogleFonts.plusJakartaSans(
-                    color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.15),
-
-                const SizedBox(height: 12),
-
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(isDark ? 0.15 : 0.08),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    user?.role.toUpperCase() ?? 'USER',
-                    style: GoogleFonts.plusJakartaSans(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                ).animate().fadeIn(delay: 400.ms).scale(),
-              ],
-            ),
-
-            const SizedBox(height: 28),
-
-            // ─── Stats Row ──────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              // ─── User Card (horizontal layout) ────
+              Container(
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardDark : Colors.white,
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(
-                    color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.5),
-                  ),
-                  boxShadow: isDark ? [] : AppColors.softShadow,
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: Row(
                   children: [
-                    _buildStatItem('Total', totalTickets.toString(), AppColors.primary, isDark),
-                    _buildDivider(isDark),
-                    _buildStatItem('Selesai', completedTickets.toString(), AppColors.statusDone, isDark),
-                    _buildDivider(isDark),
-                    _buildStatItem('Pending', pendingTickets.toString(), AppColors.statusPending, isDark),
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white.withOpacity(0.15)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          user?.name[0].toUpperCase() ?? 'U',
+                          style: GoogleFonts.outfit(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user?.name ?? 'Guest User',
+                            style: GoogleFonts.outfit(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '@${user?.username ?? 'guest'}',
+                            style: GoogleFonts.inter(
+                              color: Colors.white.withOpacity(0.6),
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              user?.role.toUpperCase() ?? 'USER',
+                              style: GoogleFonts.sourceCodePro(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 10,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1),
+              ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
 
-            const SizedBox(height: 28),
+              const SizedBox(height: 20),
 
-            // ─── Settings ───────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // ─── Stats as horizontal pills ────────
+              Row(
                 children: [
-                  Text(
-                    'PENGATURAN',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                      letterSpacing: 1.5,
-                    ),
-                  ).animate().fadeIn(delay: 600.ms),
-                  const SizedBox(height: 12),
-
-                  _buildSettingsCard(
-                    context,
-                    isDark: isDark,
-                    items: [
-                      _buildSettingsItem(
-                        icon: Icons.dark_mode_outlined,
-                        title: 'Mode Gelap',
-                        isDark: isDark,
-                        trailing: Switch.adaptive(
-                          value: themeMode == ThemeMode.dark,
-                          onChanged: (value) =>
-                              ref.read(themeNotifierProvider.notifier).toggleTheme(),
-                          activeColor: AppColors.primary,
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        indent: 56,
-                        color: isDark ? AppColors.borderDark : AppColors.dividerLight,
-                      ),
-                      _buildSettingsItem(
-                        icon: Icons.language_rounded,
-                        title: 'Bahasa',
-                        isDark: isDark,
-                        trailing: Text(
-                          'Indonesia',
-                          style: GoogleFonts.plusJakartaSans(
-                            color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 700.ms).slideX(begin: 0.05),
-
-                  const SizedBox(height: 20),
-
-                  Text(
-                    'DUKUNGAN',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                      letterSpacing: 1.5,
-                    ),
-                  ).animate().fadeIn(delay: 800.ms),
-                  const SizedBox(height: 12),
-
-                  _buildSettingsCard(
-                    context,
-                    isDark: isDark,
-                    items: [
-                      _buildSettingsItem(
-                        icon: Icons.help_outline_rounded,
-                        title: 'Pusat Bantuan',
-                        isDark: isDark,
-                        onTap: () {},
-                      ),
-                      Divider(
-                        height: 1,
-                        indent: 56,
-                        color: isDark ? AppColors.borderDark : AppColors.dividerLight,
-                      ),
-                      _buildSettingsItem(
-                        icon: Icons.info_outline_rounded,
-                        title: 'Tentang Aplikasi',
-                        isDark: isDark,
-                        onTap: () {},
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 900.ms).slideX(begin: 0.05),
-
-                  const SizedBox(height: 28),
-
-                  // ─── Logout Button ────────────────
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            backgroundColor: isDark ? AppColors.cardDark : Colors.white,
-                            title: Text(
-                              'Keluar',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : AppColors.textPrimary,
-                              ),
-                            ),
-                            content: Text(
-                              'Apakah Anda yakin ingin keluar dari akun?',
-                              style: GoogleFonts.plusJakartaSans(
-                                color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx),
-                                child: Text(
-                                  'Batal',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(ctx);
-                                  ref.read(authNotifierProvider.notifier).logout();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.error,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size(0, 44),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Keluar',
-                                  style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.logout_rounded, size: 18),
-                      label: Text(
-                        'Keluar dari Akun',
-                        style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark
-                            ? AppColors.error.withOpacity(0.12)
-                            : AppColors.errorSoft,
-                        foregroundColor: AppColors.error,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        minimumSize: const Size(double.infinity, 56),
-                      ),
-                    ),
-                  ).animate().fadeIn(delay: 1000.ms).slideY(begin: 0.1),
-
-                  const SizedBox(height: 28),
-
-                  // Version info
-                  Center(
-                    child: Text(
-                      'E-Ticket Helpdesk v1.0.0',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 11,
-                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                      ),
-                    ),
-                  ).animate().fadeIn(delay: 1100.ms),
-
-                  const SizedBox(height: 100),
+                  _buildStatPill(totalTickets.toString(), 'Total', AppColors.primary, isDark),
+                  const SizedBox(width: 10),
+                  _buildStatPill(completedTickets.toString(), 'Selesai', AppColors.statusDone, isDark),
+                  const SizedBox(width: 10),
+                  _buildStatPill(pendingTickets.toString(), 'Pending', AppColors.statusPending, isDark),
                 ],
+              ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
+
+              const SizedBox(height: 32),
+
+              // ─── Preferences ─────────────────────
+              Text(
+                'PREFERENSI',
+                style: GoogleFonts.sourceCodePro(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                  letterSpacing: 2,
+                ),
+              ).animate().fadeIn(delay: 300.ms),
+              const SizedBox(height: 12),
+
+              _buildMenuItem(
+                icon: Icons.dark_mode_outlined,
+                title: 'Mode Gelap',
+                isDark: isDark,
+                trailing: Transform.scale(
+                  scale: 0.85,
+                  child: Switch.adaptive(
+                    value: themeMode == ThemeMode.dark,
+                    onChanged: (value) =>
+                        ref.read(themeNotifierProvider.notifier).toggleTheme(),
+                    activeColor: AppColors.primary,
+                  ),
+                ),
+              ).animate().fadeIn(delay: 350.ms).slideX(begin: 0.04),
+
+              _buildMenuItem(
+                icon: Icons.language_rounded,
+                title: 'Bahasa',
+                subtitle: 'Indonesia',
+                isDark: isDark,
+              ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.04),
+
+              const SizedBox(height: 24),
+
+              // ─── Support ──────────────────────────
+              Text(
+                'BANTUAN',
+                style: GoogleFonts.sourceCodePro(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                  letterSpacing: 2,
+                ),
+              ).animate().fadeIn(delay: 450.ms),
+              const SizedBox(height: 12),
+
+              _buildMenuItem(
+                icon: Icons.help_outline_rounded,
+                title: 'Pusat Bantuan',
+                isDark: isDark,
+                onTap: () {},
+              ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.04),
+
+              _buildMenuItem(
+                icon: Icons.info_outline_rounded,
+                title: 'Tentang Aplikasi',
+                isDark: isDark,
+                onTap: () {},
+              ).animate().fadeIn(delay: 550.ms).slideX(begin: 0.04),
+
+              const SizedBox(height: 24),
+
+              // ─── Danger Zone ──────────────────────
+              Text(
+                'AKUN',
+                style: GoogleFonts.sourceCodePro(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.error.withOpacity(0.7),
+                  letterSpacing: 2,
+                ),
+              ).animate().fadeIn(delay: 600.ms),
+              const SizedBox(height: 12),
+
+              _buildMenuItem(
+                icon: Icons.logout_rounded,
+                title: 'Keluar dari Akun',
+                isDark: isDark,
+                isDestructive: true,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      backgroundColor: isDark ? AppColors.cardDark : Colors.white,
+                      title: Text(
+                        'Keluar',
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? Colors.white : AppColors.textPrimary,
+                        ),
+                      ),
+                      content: Text(
+                        'Apakah Anda yakin ingin keluar dari akun?',
+                        style: GoogleFonts.inter(
+                          color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Text(
+                            'Batal',
+                            style: GoogleFonts.outfit(
+                              color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            ref.read(authNotifierProvider.notifier).logout();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.error,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(0, 44),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: Text(
+                            'Keluar',
+                            style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ).animate().fadeIn(delay: 650.ms).slideX(begin: 0.04),
+
+              const SizedBox(height: 32),
+
+              Center(
+                child: Text(
+                  'E-Ticket Helpdesk v1.0.0',
+                  style: GoogleFonts.sourceCodePro(
+                    fontSize: 11,
+                    color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ).animate().fadeIn(delay: 700.ms),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─── Stat Pill (expanded) ─────────────────────────
+  Widget _buildStatPill(String value, String label, Color color, bool isDark) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardDark : Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.4),
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: GoogleFonts.outfit(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: color,
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
               ),
             ),
           ],
@@ -410,94 +340,78 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(String label, String value, Color color, bool isDark) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: color,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDivider(bool isDark) {
-    return Container(
-      width: 1,
-      height: 36,
-      color: isDark ? AppColors.borderDark : AppColors.dividerLight,
-    );
-  }
-
-  Widget _buildSettingsCard(
-    BuildContext context, {
-    required bool isDark,
-    required List<Widget> items,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.5),
-        ),
-        boxShadow: isDark ? [] : AppColors.softShadow,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Column(children: items),
-      ),
-    );
-  }
-
-  Widget _buildSettingsItem({
+  // ─── Menu Item (flat, no card wrapper) ────────────
+  Widget _buildMenuItem({
     required IconData icon,
     required String title,
     required bool isDark,
+    String? subtitle,
     Widget? trailing,
     VoidCallback? onTap,
+    bool isDestructive = false,
   }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(isDark ? 0.12 : 0.06),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: AppColors.primary, size: 20),
-      ),
-      title: Text(
-        title,
-        style: GoogleFonts.plusJakartaSans(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: isDark ? Colors.white : AppColors.textPrimary,
-        ),
-      ),
-      trailing: trailing ??
-          Icon(
-            Icons.chevron_right_rounded,
-            color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-            size: 20,
-          ),
+    final color = isDestructive ? AppColors.error : AppColors.primary;
+    final textColor = isDestructive
+        ? AppColors.error
+        : (isDark ? Colors.white : AppColors.textPrimary);
+
+    return GestureDetector(
       onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardDark : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDark
+                ? AppColors.borderDark
+                : (isDestructive ? AppColors.error.withOpacity(0.1) : AppColors.borderLight.withOpacity(0.3)),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(isDark ? 0.08 : 0.05),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: textColor,
+                    ),
+                  ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            trailing ??
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                  size: 20,
+                ),
+          ],
+        ),
+      ),
     );
   }
 }

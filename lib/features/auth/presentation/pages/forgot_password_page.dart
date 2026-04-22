@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,306 +42,258 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // ─── Background ─────────────────────────────
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0EA5E9),
-                  Color(0xFF4F46E5),
-                  Color(0xFF7C3AED),
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top bar
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 4, 16, 0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 16,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
                 ],
               ),
             ),
-          ),
 
-          // Decorative shapes
-          Positioned(
-            top: -60,
-            left: -50,
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.07),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -40,
-            right: -30,
-            child: Container(
-              width: 160,
-              height: 160,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: Colors.white.withOpacity(0.05),
-              ),
-            ),
-          ),
-
-          // ─── Content ────────────────────────────────
-          SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 16),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    child: _isSent
+                        ? _buildSuccessState(isDark)
+                        : _buildFormState(isDark),
                   ),
                 ),
-                Expanded(
-                  child: Center(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 28),
-                      child: _isSent ? _buildSuccessState() : _buildFormState(isDark),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSuccessState() {
+  Widget _buildSuccessState(bool isDark) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      key: const ValueKey('success'),
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Large icon with background
         Container(
-          width: 90,
-          height: 90,
+          width: 80,
+          height: 80,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
-            shape: BoxShape.circle,
+            color: AppColors.success.withOpacity(isDark ? 0.1 : 0.08),
+            borderRadius: BorderRadius.circular(24),
           ),
           child: const Icon(
             Icons.mark_email_read_rounded,
-            size: 44,
-            color: Colors.white,
+            size: 36,
+            color: AppColors.success,
           ),
-        ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack).fadeIn(),
+        ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
 
         const SizedBox(height: 28),
 
         Text(
           'Email Terkirim!',
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 28,
+          style: GoogleFonts.outfit(
+            fontSize: 32,
             fontWeight: FontWeight.w800,
-            color: Colors.white,
+            color: isDark ? Colors.white : AppColors.textPrimary,
+            letterSpacing: -1,
           ),
-        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.15),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
 
         Text(
           'Instruksi pengaturan ulang kata sandi telah dikirim ke email Anda. Periksa kotak masuk atau folder spam.',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 14,
-            color: Colors.white.withOpacity(0.65),
+          style: GoogleFonts.inter(
+            fontSize: 15,
+            color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
             height: 1.6,
           ),
-        ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
+        ).animate().fadeIn(delay: 300.ms),
 
         const SizedBox(height: 36),
 
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back_rounded, size: 18),
-          label: Text(
-            'Kembali ke Login',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+        // Inline button
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back_rounded, size: 18),
+            label: Text(
+              'Kembali ke Login',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w600, fontSize: 15),
+            ),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: BorderSide(color: isDark ? AppColors.borderDark : AppColors.primary.withOpacity(0.2)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
           ),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.white,
-            side: BorderSide(color: Colors.white.withOpacity(0.4)),
-            minimumSize: const Size(double.infinity, 56),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-        ).animate().fadeIn(delay: 500.ms),
+        ).animate().fadeIn(delay: 400.ms),
       ],
     );
   }
 
   Widget _buildFormState(bool isDark) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      key: const ValueKey('form'),
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Icon
+        // Large icon
         Container(
-          width: 68,
-          height: 68,
+          width: 72,
+          height: 72,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.primary.withOpacity(isDark ? 0.1 : 0.06),
             borderRadius: BorderRadius.circular(22),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
-              ),
-            ],
           ),
-          child: const Icon(Icons.lock_reset_rounded, size: 32, color: AppColors.primary),
-        ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack).fadeIn(),
-
-        const SizedBox(height: 24),
-
-        Text(
-          'Lupa Kata Sandi?',
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 28,
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
+          child: const Icon(
+            Icons.lock_reset_rounded,
+            size: 32,
+            color: AppColors.primary,
           ),
-        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
-
-        const SizedBox(height: 8),
-
-        Text(
-          'Masukkan email atau username Anda\nuntuk memulihkan akun',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 14,
-            color: Colors.white.withOpacity(0.6),
-            height: 1.5,
-          ),
-        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
-
-        const SizedBox(height: 36),
-
-        // Form Card
-        ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              padding: const EdgeInsets.all(28),
-              decoration: BoxDecoration(
-                color: (isDark ? Colors.black : Colors.white)
-                    .withOpacity(isDark ? 0.3 : 0.88),
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(
-                  color: Colors.white.withOpacity(isDark ? 0.08 : 0.25),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextField(
-                    controller: _emailController,
-                    style: GoogleFonts.plusJakartaSans(fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText: 'Email / Username',
-                      prefixIcon: Icon(
-                        Icons.email_outlined,
-                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                        size: 20,
-                      ),
-                    ),
-                  ).animate().fadeIn(delay: 400.ms).slideX(begin: -0.05),
-
-                  const SizedBox(height: 24),
-
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0EA5E9), Color(0xFF4F46E5)],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF0EA5E9).withOpacity(0.35),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _handleReset,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        minimumSize: const Size(double.infinity, 56),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.5,
-                              ),
-                            )
-                          : Text(
-                              'Kirim Instruksi',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                            ),
-                    ),
-                  ).animate().fadeIn(delay: 500.ms).scale(begin: const Offset(0.95, 0.95)),
-                ],
-              ),
-            ),
-          ),
-        ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.08),
+        ).animate().fadeIn(delay: 200.ms).scale(duration: 400.ms, curve: Curves.easeOutBack),
 
         const SizedBox(height: 28),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Ingat kata sandi? ',
-              style: GoogleFonts.plusJakartaSans(
-                color: Colors.white.withOpacity(0.65),
-                fontSize: 13,
+        Text(
+          'Lupa Kata\nSandi?',
+          style: GoogleFonts.outfit(
+            fontSize: 36,
+            fontWeight: FontWeight.w800,
+            color: isDark ? Colors.white : AppColors.textPrimary,
+            height: 1.1,
+            letterSpacing: -1,
+          ),
+        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.15),
+
+        const SizedBox(height: 10),
+
+        Text(
+          'Masukkan email atau username Anda untuk menerima instruksi pemulihan akun.',
+          style: GoogleFonts.inter(
+            fontSize: 15,
+            color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+            height: 1.5,
+          ),
+        ).animate().fadeIn(delay: 400.ms),
+
+        const SizedBox(height: 36),
+
+        Text(
+          'Email / Username',
+          style: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _emailController,
+          style: GoogleFonts.inter(fontSize: 15),
+          decoration: InputDecoration(
+            hintText: 'Masukkan email atau username...',
+            prefixIcon: Icon(
+              Icons.email_outlined,
+              color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+              size: 20,
+            ),
+          ),
+        ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1),
+
+        const SizedBox(height: 32),
+
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton(
+            onPressed: _isLoading ? null : _handleReset,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Text(
-                'Masuk',
-                style: GoogleFonts.plusJakartaSans(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
+            child: _isLoading
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.5,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Kirim Instruksi',
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.send_rounded, size: 18),
+                    ],
+                  ),
+          ),
+        ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.96, 0.96)),
+
+        const SizedBox(height: 24),
+
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Ingat kata sandi? ',
+                style: GoogleFonts.inter(
                   fontSize: 13,
-                  decoration: TextDecoration.underline,
-                  decorationColor: Colors.white,
+                  color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
                 ),
               ),
-            ),
-          ],
-        ).animate().fadeIn(delay: 600.ms),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Masuk',
+                  style: GoogleFonts.outfit(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ).animate().fadeIn(delay: 700.ms),
 
         const SizedBox(height: 20),
       ],

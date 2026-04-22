@@ -47,8 +47,8 @@ class TicketMockDataSource {
         status: 'pending',
         priority: 'high',
         creatorId: '2',
-        creatorName: 'John Doe',
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+        creatorName: 'Ody Dzakwan',
+        createdAt: DateTime.now().subtract(const Duration(hours: 5)),
         comments: [],
       ),
       TicketModel(
@@ -58,7 +58,7 @@ class TicketMockDataSource {
         status: 'proses',
         priority: 'medium',
         creatorId: '2',
-        creatorName: 'John Doe',
+        creatorName: 'Ody Dzakwan',
         assigneeId: '1',
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         comments: [

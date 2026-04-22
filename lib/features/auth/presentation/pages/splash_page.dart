@@ -8,146 +8,129 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: AppColors.meshGradient,
-        ),
-        child: Stack(
-          children: [
-            // Decorative floating shapes
-            Positioned(
-              top: -80,
-              right: -60,
-              child: Container(
-                width: 240,
-                height: 240,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.08),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -100,
-              left: -80,
-              child: Container(
-                width: 300,
-                height: 300,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
-                ),
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.3,
-              left: -40,
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.white.withOpacity(0.06),
-                ),
-              ),
-            ),
+    final size = MediaQuery.of(context).size;
 
-            // Center content
-            Center(
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0D12),
+      body: Stack(
+        children: [
+          // Subtle grid lines
+          ...List.generate(6, (i) => Positioned(
+            left: 0, right: 0,
+            top: size.height * (i / 6),
+            child: Container(height: 0.3, color: Colors.white.withOpacity(0.03)),
+          )),
+          ...List.generate(4, (i) => Positioned(
+            top: 0, bottom: 0,
+            left: size.width * ((i + 1) / 5),
+            child: Container(width: 0.3, color: Colors.white.withOpacity(0.03)),
+          )),
+
+          // Glow
+          Positioned(
+            top: size.height * 0.2,
+            left: size.width * 0.3,
+            child: Container(
+              width: 200, height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(colors: [
+                  AppColors.primary.withOpacity(0.08),
+                  Colors.transparent,
+                ]),
+              ),
+            ),
+          ),
+
+          // Content — left-aligned, bottom-heavy
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Logo container
+                  const Spacer(flex: 3),
+
+                  // Logo mark
                   Container(
-                    width: 90,
-                    height: 90,
+                    width: 56, height: 56,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 40,
-                          offset: const Offset(0, 16),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.support_agent_rounded,
-                      size: 44,
+                      borderRadius: BorderRadius.circular(16),
                       color: AppColors.primary,
                     ),
-                  )
-                      .animate()
-                      .scale(
-                        begin: const Offset(0.5, 0.5),
-                        end: const Offset(1, 1),
-                        duration: 800.ms,
-                        curve: Curves.easeOutBack,
-                      )
-                      .fadeIn(duration: 600.ms),
+                    child: const Icon(Icons.support_agent_rounded, size: 28, color: Colors.white),
+                  ).animate()
+                      .scale(begin: const Offset(0, 0), duration: 600.ms, curve: Curves.easeOutBack)
+                      .fadeIn(),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
 
-                  // App name
                   Text(
                     'E-Ticket',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
+                    style: GoogleFonts.outfit(
+                      fontSize: 44, fontWeight: FontWeight.w800,
+                      color: Colors.white, letterSpacing: -2, height: 1,
                     ),
-                  )
-                      .animate()
-                      .fadeIn(delay: 400.ms, duration: 600.ms)
-                      .slideY(begin: 0.3, end: 0),
-
-                  const SizedBox(height: 4),
+                  ).animate().fadeIn(delay: 300.ms).slideX(begin: -0.15),
 
                   Text(
                     'Helpdesk',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white.withOpacity(0.7),
-                      letterSpacing: 4,
+                    style: GoogleFonts.outfit(
+                      fontSize: 44, fontWeight: FontWeight.w800,
+                      color: AppColors.primaryLight, letterSpacing: -2, height: 1.1,
                     ),
-                  )
-                      .animate()
-                      .fadeIn(delay: 600.ms, duration: 600.ms)
-                      .slideY(begin: 0.3, end: 0),
+                  ).animate().fadeIn(delay: 400.ms).slideX(begin: -0.15),
 
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 16),
 
-                  // Loading indicator
-                  SizedBox(
-                    width: 28,
-                    height: 28,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: Colors.white.withOpacity(0.8),
+                  Container(
+                    width: 40, height: 3,
+                    decoration: BoxDecoration(
+                      color: AppColors.accent,
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                  ).animate().fadeIn(delay: 900.ms),
+                  ).animate().fadeIn(delay: 600.ms).slideX(begin: -0.3),
 
                   const SizedBox(height: 16),
 
                   Text(
-                    'Memuat...',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 13,
-                      color: Colors.white.withOpacity(0.5),
-                      fontWeight: FontWeight.w500,
+                    'Sistem manajemen tiket\nbantuan yang cerdas.',
+                    style: GoogleFonts.inter(
+                      fontSize: 15,
+                      color: Colors.white.withOpacity(0.35),
+                      height: 1.5,
                     ),
-                  ).animate().fadeIn(delay: 1000.ms),
+                  ).animate().fadeIn(delay: 700.ms),
+
+                  const Spacer(flex: 2),
+
+                  // Loading
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 16, height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primaryLight.withOpacity(0.5),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Memuat...',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.25),
+                        ),
+                      ),
+                    ],
+                  ).animate().fadeIn(delay: 900.ms),
+
+                  const SizedBox(height: 48),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

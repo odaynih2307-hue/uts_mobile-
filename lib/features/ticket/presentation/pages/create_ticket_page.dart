@@ -38,7 +38,7 @@ class _CreateTicketPageState extends ConsumerState<CreateTicketPage> {
     if (Platform.isWindows) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Fitur Kamera tidak didukung pada Windows. Silakan gunakan fitur Galeri/Pilih File.'),
+          content: Text('Fitur Kamera tidak didukung pada Windows.'),
           backgroundColor: Colors.orange,
         ),
       );
@@ -62,7 +62,7 @@ class _CreateTicketPageState extends ConsumerState<CreateTicketPage> {
         SnackBar(
           content: Text(
             'Judul dan Deskripsi wajib diisi',
-            style: GoogleFonts.plusJakartaSans(),
+            style: GoogleFonts.inter(),
           ),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
@@ -86,10 +86,7 @@ class _CreateTicketPageState extends ConsumerState<CreateTicketPage> {
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Tiket berhasil dibuat!',
-            style: GoogleFonts.plusJakartaSans(),
-          ),
+          content: Text('Tiket berhasil dibuat!', style: GoogleFonts.inter()),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
         ),
@@ -104,275 +101,193 @@ class _CreateTicketPageState extends ConsumerState<CreateTicketPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // ─── Header gradient ──────────────────────
-          Container(
-            height: 160,
-            decoration: const BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
-          ),
-
-          SafeArea(
-            child: Column(
-              children: [
-                // ─── App Bar ────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ─── Top Bar ──────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 4, 16, 0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const Spacer(),
-                      Text(
-                        'Buat Tiket Baru',
-                        style: GoogleFonts.plusJakartaSans(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      child: Icon(
+                        Icons.close_rounded,
+                        size: 18,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
                       ),
-                      const Spacer(),
-                      const SizedBox(width: 48),
-                    ],
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                ),
-
-                // ─── Form Content ───────────────────
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Form Card
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.cardDark : Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.5),
-                            ),
-                            boxShadow: isDark ? [] : AppColors.elevatedShadow,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Section header
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary.withOpacity(isDark ? 0.12 : 0.08),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(Icons.edit_note_rounded, color: AppColors.primary, size: 20),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'Detail Keluhan',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark ? Colors.white : AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
+                  const Spacer(),
+                  Text(
+                    'Buat Tiket',
+                    style: GoogleFonts.outfit(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                    ),
+                  ),
+                  const Spacer(),
+                  // Submit inline button
+                  GestureDetector(
+                    onTap: ticketState.isLoading ? null : _handleSubmit,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ticketState.isLoading
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
                               ),
-                              const SizedBox(height: 24),
-
-                              // Title field
-                              Text(
-                                'Judul Keluhan',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextField(
-                                controller: _titleController,
-                                style: GoogleFonts.plusJakartaSans(fontSize: 14),
-                                decoration: InputDecoration(
-                                  hintText: 'Contoh: Aplikasi tidak bisa login',
-                                  prefixIcon: Icon(
-                                    Icons.title_rounded,
-                                    size: 20,
-                                    color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                                  ),
-                                ),
-                              ).animate().fadeIn(delay: 200.ms),
-
-                              const SizedBox(height: 20),
-
-                              // Description field
-                              Text(
-                                'Deskripsi Masalah',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextField(
-                                controller: _descController,
-                                maxLines: 5,
-                                style: GoogleFonts.plusJakartaSans(fontSize: 14),
-                                decoration: InputDecoration(
-                                  hintText: 'Jelaskan masalah Anda secara detail...',
-                                  alignLabelWithHint: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  filled: true,
-                                  fillColor: isDark
-                                      ? AppColors.surfaceElevatedDark
-                                      : AppColors.surfaceElevatedLight,
-                                ),
-                              ).animate().fadeIn(delay: 300.ms),
-
-                              const SizedBox(height: 20),
-
-                              // Priority Selection
-                              Text(
-                                'Prioritas',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  _buildPriorityOption('low', 'Rendah', AppColors.success, isDark),
-                                  const SizedBox(width: 8),
-                                  _buildPriorityOption('medium', 'Sedang', Colors.orange, isDark),
-                                  const SizedBox(width: 8),
-                                  _buildPriorityOption('high', 'Tinggi', AppColors.error, isDark),
-                                ],
-                              ).animate().fadeIn(delay: 350.ms),
-                            ],
-                          ),
-                        ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
-
-                        const SizedBox(height: 16),
-
-                        // ─── Image Picker Card ──────────
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.cardDark : Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.5),
-                            ),
-                            boxShadow: isDark ? [] : AppColors.softShadow,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.accent.withOpacity(isDark ? 0.12 : 0.08),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(Icons.image_rounded, color: AppColors.accent, size: 20),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'Lampiran Gambar',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark ? Colors.white : AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              _buildImagePicker(isDark),
-                            ],
-                          ),
-                        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
-
-                        const SizedBox(height: 24),
-
-                        // ─── Submit Button ──────────────
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: AppColors.primaryGradient,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primary.withOpacity(0.35),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton.icon(
-                            onPressed: ticketState.isLoading ? null : _handleSubmit,
-                            icon: ticketState.isLoading
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.5,
-                                    ),
-                                  )
-                                : const Icon(Icons.send_rounded, size: 18, color: Colors.white),
-                            label: Text(
-                              ticketState.isLoading ? 'Mengirim...' : 'Kirim Tiket',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 15,
+                            )
+                          : Text(
+                              'Kirim',
+                              style: GoogleFonts.outfit(
+                                fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
                               ),
                             ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              minimumSize: const Size(double.infinity, 56),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          ),
-                        ).animate().fadeIn(delay: 400.ms).scale(begin: const Offset(0.95, 0.95)),
-
-                        const SizedBox(height: 20),
-                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+
+            // ─── Form Content ─────────────────────────
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title field
+                    Text(
+                      'Judul Keluhan',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _titleController,
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Aplikasi tidak bisa login...',
+                        hintStyle: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.textDarkSecondary.withOpacity(0.4) : AppColors.textTertiary.withOpacity(0.5),
+                        ),
+                        filled: false,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ).animate().fadeIn(delay: 200.ms),
+
+                    Container(
+                      height: 1,
+                      color: isDark ? AppColors.borderDark : AppColors.dividerLight,
+                      margin: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+
+                    // Description field
+                    Text(
+                      'Deskripsi Masalah',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _descController,
+                      maxLines: 6,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
+                        height: 1.6,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Jelaskan masalah Anda secara detail...',
+                        hintStyle: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: isDark ? AppColors.textDarkSecondary.withOpacity(0.4) : AppColors.textTertiary.withOpacity(0.5),
+                        ),
+                        filled: true,
+                        fillColor: isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ).animate().fadeIn(delay: 300.ms),
+
+                    const SizedBox(height: 24),
+
+                    // Priority
+                    Text(
+                      'PRIORITAS',
+                      style: GoogleFonts.sourceCodePro(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        _buildPriorityChip('low', 'Rendah', AppColors.success, isDark),
+                        const SizedBox(width: 8),
+                        _buildPriorityChip('medium', 'Sedang', AppColors.warning, isDark),
+                        const SizedBox(width: 8),
+                        _buildPriorityChip('high', 'Tinggi', AppColors.error, isDark),
+                      ],
+                    ).animate().fadeIn(delay: 350.ms),
+
+                    const SizedBox(height: 24),
+
+                    // Attachment section
+                    Text(
+                      'LAMPIRAN',
+                      style: GoogleFonts.sourceCodePro(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildImagePicker(isDark),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -387,7 +302,7 @@ class _CreateTicketPageState extends ConsumerState<CreateTicketPage> {
                 borderRadius: BorderRadius.circular(16),
                 child: Image.file(
                   _selectedImage!,
-                  height: 200,
+                  height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
@@ -403,140 +318,113 @@ class _CreateTicketPageState extends ConsumerState<CreateTicketPage> {
                       color: Colors.black.withOpacity(0.6),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.close_rounded, color: Colors.white, size: 18),
+                    child: const Icon(Icons.close_rounded, color: Colors.white, size: 16),
                   ),
                 ),
               ),
             ],
           )
         else
-          GestureDetector(
-            onTap: _pickImage,
-            child: Container(
-              height: 150,
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isDark ? AppColors.borderDark : AppColors.borderLight,
-                  style: BorderStyle.solid,
+          Row(
+            children: [
+              Expanded(
+                child: _buildAttachOption(
+                  icon: Icons.photo_library_outlined,
+                  label: 'Galeri',
+                  onTap: _pickImage,
+                  isDark: isDark,
                 ),
               ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(isDark ? 0.12 : 0.06),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.add_photo_alternate_outlined,
-                        size: 28,
-                        color: isDark ? AppColors.primaryLight : AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Tap untuk pilih gambar',
-                      style: GoogleFonts.plusJakartaSans(
-                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildAttachOption(
+                  icon: Icons.camera_alt_outlined,
+                  label: 'Kamera',
+                  onTap: _takePhoto,
+                  isDark: isDark,
                 ),
               ),
-            ),
+            ],
           ),
-        const SizedBox(height: 12),
-        Row(
+      ],
+    ).animate().fadeIn(delay: 400.ms);
+  }
+
+  Widget _buildAttachOption({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 28),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.4),
+          ),
+        ),
+        child: Column(
           children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _takePhoto,
-                icon: Icon(
-                  Icons.camera_alt_outlined,
-                  size: 18,
-                  color: isDark ? AppColors.primaryLight : AppColors.primary,
-                ),
-                label: Text(
-                  'Kamera',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: isDark ? AppColors.primaryLight : AppColors.primary,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: isDark ? AppColors.borderDark : AppColors.primary.withOpacity(0.3),
-                  ),
-                  minimumSize: const Size(0, 46),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
+            Icon(
+              icon,
+              size: 24,
+              color: isDark ? AppColors.primaryLight : AppColors.primary,
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _pickImage,
-                icon: Icon(
-                  Icons.photo_library_outlined,
-                  size: 18,
-                  color: isDark ? AppColors.primaryLight : AppColors.primary,
-                ),
-                label: Text(
-                  'Galeri',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: isDark ? AppColors.primaryLight : AppColors.primary,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: isDark ? AppColors.borderDark : AppColors.primary.withOpacity(0.3),
-                  ),
-                  minimumSize: const Size(0, 46),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
               ),
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 
-  Widget _buildPriorityOption(String value, String label, Color color, bool isDark) {
+  Widget _buildPriorityChip(String value, String label, Color color, bool isDark) {
     final isSelected = _selectedPriority == value;
     return Expanded(
       child: GestureDetector(
         onTap: () => setState(() => _selectedPriority = value),
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected 
-                ? color.withOpacity(0.15) 
-                : (isDark ? AppColors.surfaceElevatedDark : AppColors.surfaceElevatedLight),
+            color: isSelected
+                ? color.withOpacity(0.12)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? color : Colors.transparent,
-              width: 1.5,
+              color: isSelected ? color : (isDark ? AppColors.borderDark : AppColors.borderLight),
+              width: isSelected ? 1.5 : 1,
             ),
           ),
           child: Center(
-            child: Text(
-              label,
-              style: GoogleFonts.plusJakartaSans(
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected ? color : (isDark ? AppColors.textDarkSecondary : AppColors.textSecondary),
-                fontSize: 13,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isSelected)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Icon(Icons.check_rounded, size: 14, color: color),
+                  ),
+                Text(
+                  label,
+                  style: GoogleFonts.inter(
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color: isSelected ? color : (isDark ? AppColors.textDarkSecondary : AppColors.textSecondary),
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

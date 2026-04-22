@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -47,318 +46,317 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Stack(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      body: Column(
         children: [
-          // ─── Background Gradient ────────────────────
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: AppColors.meshGradient,
-            ),
-          ),
-
-          // ─── Decorative Shapes ──────────────────────
-          Positioned(
-            top: -size.height * 0.12,
-            right: -size.width * 0.2,
+          // ─── Top Hero Section (takes 35% height) ─────
+          Expanded(
+            flex: 35,
             child: Container(
-              width: size.width * 0.7,
-              height: size.width * 0.7,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.06),
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: AppColors.heroGradient,
               ),
-            ),
-          ),
-          Positioned(
-            bottom: -60,
-            left: -40,
-            child: Container(
-              width: 180,
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: Colors.white.withOpacity(0.04),
-              ),
-            ),
-          ),
-          Positioned(
-            top: size.height * 0.45,
-            right: -20,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white.withOpacity(0.06),
-              ),
-            ),
-          ),
-
-          // ─── Main Content ───────────────────────────
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              child: SafeArea(
+                bottom: false,
+                child: Stack(
                   children: [
-                    const SizedBox(height: 20),
-
-                    // Logo
-                    Container(
-                      width: 76,
-                      height: 76,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.12),
-                            blurRadius: 32,
-                            offset: const Offset(0, 12),
-                          ),
-                        ],
+                    // Grid pattern
+                    ...List.generate(4, (i) => Positioned(
+                      left: 0,
+                      right: 0,
+                      top: (i + 1) * (size.height * 0.35 / 5),
+                      child: Container(
+                        height: 0.3,
+                        color: Colors.white.withOpacity(0.04),
                       ),
-                      child: const Icon(
-                        Icons.confirmation_number_rounded,
-                        size: 36,
-                        color: AppColors.primary,
-                      ),
-                    )
-                        .animate()
-                        .scale(
-                          begin: const Offset(0.6, 0.6),
-                          duration: 600.ms,
-                          curve: Curves.easeOutBack,
-                        )
-                        .fadeIn(),
-
-                    const SizedBox(height: 28),
-
-                    // Title
-                    Text(
-                      'Selamat Datang',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -0.3,
-                      ),
-                    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
-
-                    const SizedBox(height: 6),
-
-                    Text(
-                      'Masuk ke akun Anda untuk melanjutkan',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        color: Colors.white.withOpacity(0.65),
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
-
-                    const SizedBox(height: 36),
-
-                    // ─── Login Card ─────────────────────
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(28),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                        child: Container(
-                          padding: const EdgeInsets.all(28),
-                          decoration: BoxDecoration(
-                            color: (isDark ? Colors.black : Colors.white)
-                                .withOpacity(isDark ? 0.3 : 0.88),
-                            borderRadius: BorderRadius.circular(28),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(isDark ? 0.08 : 0.25),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
-                                blurRadius: 40,
-                                offset: const Offset(0, 16),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              // Username
-                              TextField(
-                                controller: _usernameController,
-                                style: GoogleFonts.plusJakartaSans(fontSize: 14),
-                                decoration: InputDecoration(
-                                  hintText: 'Username',
-                                  prefixIcon: Icon(
-                                    Icons.person_outline_rounded,
-                                    color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                                    size: 20,
-                                  ),
-                                ),
-                              ).animate().fadeIn(delay: 400.ms).slideX(begin: -0.05),
-
-                              const SizedBox(height: 16),
-
-                              // Password
-                              TextField(
-                                controller: _passwordController,
-                                obscureText: _obscurePassword,
-                                style: GoogleFonts.plusJakartaSans(fontSize: 14),
-                                decoration: InputDecoration(
-                                  hintText: 'Password',
-                                  prefixIcon: Icon(
-                                    Icons.lock_outline_rounded,
-                                    color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                                    size: 20,
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword
-                                          ? Icons.visibility_off_outlined
-                                          : Icons.visibility_outlined,
-                                      color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                                      size: 20,
-                                    ),
-                                    onPressed: () =>
-                                        setState(() => _obscurePassword = !_obscurePassword),
-                                  ),
-                                ),
-                              ).animate().fadeIn(delay: 500.ms).slideX(begin: -0.05),
-
-                              const SizedBox(height: 8),
-
-                              // Forgot password link
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () => Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
-                                  ),
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                    minimumSize: Size.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text(
-                                    'Lupa Password?',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ),
-                              ).animate().fadeIn(delay: 550.ms),
-
-                              const SizedBox(height: 20),
-
-                              // Login Button
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: AppColors.primaryGradient,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.primary.withOpacity(0.35),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ],
-                                ),
-                                child: ElevatedButton(
-                                  onPressed: authState.isLoading ? null : _handleLogin,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    shadowColor: Colors.transparent,
-                                    minimumSize: const Size(double.infinity, 56),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  ),
-                                  child: authState.isLoading
-                                      ? const SizedBox(
-                                          width: 22,
-                                          height: 22,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 2.5,
-                                          ),
-                                        )
-                                      : Text(
-                                          'Masuk',
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                ),
-                              ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.95, 0.95)),
-
-                              const SizedBox(height: 20),
-
-                              // Divider
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Divider(
-                                      color: isDark ? Colors.white12 : Colors.grey.shade200,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                                    child: Text(
-                                      'atau',
-                                      style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 12,
-                                        color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Divider(
-                                      color: isDark ? Colors.white12 : Colors.grey.shade200,
-                                    ),
-                                  ),
-                                ],
-                              ).animate().fadeIn(delay: 700.ms),
-
-                              const SizedBox(height: 20),
-
-                              // Register Button
-                              OutlinedButton(
-                                onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (_) => const RegisterPage()),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(
-                                    color: isDark ? Colors.white24 : AppColors.borderLight,
-                                  ),
-                                  minimumSize: const Size(double.infinity, 54),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Buat Akun Baru',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: isDark ? Colors.white : AppColors.textPrimary,
-                                  ),
-                                ),
-                              ).animate().fadeIn(delay: 800.ms),
+                    )),
+                    // Floating orb
+                    Positioned(
+                      right: -40,
+                      top: 10,
+                      child: Container(
+                        width: 160,
+                        height: 160,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              AppColors.primaryLight.withOpacity(0.12),
+                              Colors.transparent,
                             ],
                           ),
                         ),
                       ),
-                    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.08),
+                    ),
+                    // Content
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(28, 16, 28, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Small pill badge
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.white.withOpacity(0.08)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.primaryLight,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'E-TICKET HELPDESK',
+                                  style: GoogleFonts.sourceCodePro(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryLight,
+                                    letterSpacing: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
 
-                    const SizedBox(height: 40),
+                          const SizedBox(height: 20),
+
+                          Text(
+                            'Selamat\nDatang.',
+                            style: GoogleFonts.outfit(
+                              fontSize: 42,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              height: 1.05,
+                              letterSpacing: -1.5,
+                            ),
+                          ).animate().fadeIn(delay: 300.ms).slideX(begin: -0.1),
+
+                          const SizedBox(height: 10),
+
+                          Text(
+                            'Masuk untuk mengelola tiket bantuan Anda',
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(0.5),
+                              height: 1.4,
+                            ),
+                          ).animate().fadeIn(delay: 400.ms),
+                        ],
+                      ),
+                    ),
                   ],
+                ),
+              ),
+            ),
+          ),
+
+          // ─── Bottom Form Section (takes 65% height) ──
+          Expanded(
+            flex: 65,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(36)),
+              ),
+              child: Transform.translate(
+                offset: const Offset(0, -36),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(28, 0, 28, 20),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(24, 36, 24, 28),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.cardDark : Colors.white,
+                      borderRadius: BorderRadius.circular(32),
+                      border: Border.all(
+                        color: isDark ? AppColors.borderDark : AppColors.borderLight.withOpacity(0.4),
+                      ),
+                      boxShadow: isDark ? [] : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 40,
+                          offset: const Offset(0, 16),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Section label
+                        Text(
+                          'MASUK AKUN',
+                          style: GoogleFonts.sourceCodePro(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                            letterSpacing: 2,
+                          ),
+                        ).animate().fadeIn(delay: 500.ms),
+                        const SizedBox(height: 24),
+
+                        // Username — label above field style
+                        Text(
+                          'Username',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: _usernameController,
+                          style: GoogleFonts.inter(fontSize: 15),
+                          decoration: InputDecoration(
+                            hintText: 'Masukkan username...',
+                            prefixIcon: Icon(
+                              Icons.alternate_email_rounded,
+                              color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                              size: 20,
+                            ),
+                          ),
+                        ).animate().fadeIn(delay: 550.ms).slideY(begin: 0.1),
+
+                        const SizedBox(height: 20),
+
+                        // Password
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Password',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: isDark ? AppColors.textDarkSecondary : AppColors.textSecondary,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
+                              ),
+                              child: Text(
+                                'Lupa Password?',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.accent,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          style: GoogleFonts.inter(fontSize: 15),
+                          decoration: InputDecoration(
+                            hintText: '••••••••',
+                            prefixIcon: Icon(
+                              Icons.lock_outline_rounded,
+                              color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                              size: 20,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
+                                color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                                size: 20,
+                              ),
+                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                            ),
+                          ),
+                        ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.1),
+
+                        const SizedBox(height: 32),
+
+                        // Login Button — full width, no gradient wrapper
+                        SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton(
+                            onPressed: authState.isLoading ? null : _handleLogin,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: authState.isLoading
+                                ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Masuk',
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Icon(Icons.arrow_forward_rounded, size: 20),
+                                    ],
+                                  ),
+                          ),
+                        ).animate().fadeIn(delay: 700.ms).scale(begin: const Offset(0.96, 0.96)),
+
+                        const SizedBox(height: 28),
+
+                        // Register link — inline text style
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Belum punya akun? ',
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  color: isDark ? AppColors.textDarkSecondary : AppColors.textTertiary,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => const RegisterPage()),
+                                ),
+                                child: Text(
+                                  'Daftar Sekarang',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ).animate().fadeIn(delay: 800.ms),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

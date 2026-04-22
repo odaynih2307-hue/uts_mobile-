@@ -17,7 +17,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           id: '1', name: 'Super Admin', username: 'admin', role: 'admin');
     } else if (username == 'user' && password == 'user123') {
       return const UserModel(
-          id: '2', name: 'John Doe', username: 'user', role: 'user');
+          id: '2', name: 'Ody Dzakwan', username: 'user', role: 'user');
     } else {
       throw Exception('Username atau Password yang anda masukan salah');
     }
